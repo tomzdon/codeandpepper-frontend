@@ -2,22 +2,34 @@
   width: 300px;
   height: 300px;
   object-fit: contain;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
   animation: animate 2s infinite ease-in-out alternate;
 
   @media only screen and (max-width: 768px) {
-    width: 300px;
-    height: 300px;
+    margin-top: 50px;
   }
 }
 
 @keyframes animate {
   to {
     transform: translateY(20px);
+  }
+}
+
+.cardsContainer {
+  width: 100%;
+  padding: 20px;
+  @media (min-width: 600px) {
+    justify-content: space-around;
+  }
+}
+
+.cardWrapper {
+  flex: 1;
+  margin: 16px;
+  max-width: calc(50% - 64px);
+
+  @media (min-width: 600px) {
+    max-width: none;
+    width: 45%;
   }
 }
