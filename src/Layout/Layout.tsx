@@ -48,7 +48,7 @@ export const Layout: React.FC<PropsWithChildren> = ({children}) => {
                             borderBottom: `1px solid white`
                         }}
                     >
-                        via Snappy Web Design
+                        Tomasz Wlodarczyk
                     </a>
                 </div>
             </footer>

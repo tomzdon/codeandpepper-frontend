@@ -1,19 +1,22 @@
 import React, {useRef, useState, useEffect} from 'react';
 import {Card, CardActionArea, CardMedia, CardContent, Typography} from '@mui/material';
 import styles from './FlippedCard.module.scss';
+import { Entity} from "../../models/types";
 
 interface FlippedCardProps {
     frontImage: string;
-    backContent: string;
+    backImage: string;
     isBouncing: boolean;
     onBounceEnd: () => void;
+    formattedJson: Entity | undefined;
 }
 
 export const FlippedCard: React.FC<FlippedCardProps> = ({
                                                             frontImage,
-                                                            backContent,
+                                                            backImage,
                                                             isBouncing,
-                                                            onBounceEnd
+                                                            onBounceEnd,
+                                                            formattedJson
                                                         }) => {
     const [isFlipped, setIsFlipped] = useState(false);
     const cardRef = useRef<HTMLDivElement>(null);
@@ -54,11 +57,16 @@ export const FlippedCard: React.FC<FlippedCardProps> = ({
                     </CardActionArea>
                 </Card>
                 <Card className={styles.cardBack}>
-                    <CardContent>
-                        <Typography variant="body1" color="textSecondary" component="p">
-                            {backContent}
-                        </Typography>
-                    </CardContent>
+                    <div className={styles.imageContainer}>
+                        <CardMedia
+                            component="img"
+                            image={backImage}
+                            alt="Back Side"
+                        />
+                    <Typography className={styles.overlayText} component="p">
+                        {formattedJson?.name}
+                    </Typography>
+                    </div>
                 </Card>
             </div>
         </div>

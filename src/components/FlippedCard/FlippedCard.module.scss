@@ -1,7 +1,7 @@
 .flipCardContainer {
   perspective: 1000px;
   width: 300px;
-  height:300px;
+  height: 300px;
   margin-bottom: 20px;
 }
 
@@ -45,6 +45,21 @@
 .flipCardBounce {
   animation: bounce 2s ease 3; // Bounces 3 times
 }
+
 .flipCardFlipped {
   transform: rotateY(180deg);
+}
+
+.imageContainer {
+  position: relative;
+}
+
+.overlayText {
+  position: absolute;
+  font-weight: 600;
+  font-size: 2rem;
+  top: 85%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
 }

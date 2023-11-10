@@ -1,15 +1,19 @@
 import React from 'react';
 import {ThemeProvider} from "./themes/ThemeContext";
 import {Layout} from "./Layout/Layout";
-import { GameArea } from './components/GameArea/GameArea';
+import {GameArea} from './components/GameArea/GameArea';
+import {ApolloProvider} from "@apollo/client";
+import {apolloClient} from './services/apolloClient';
 
 function App() {
     return (
-        <ThemeProvider>
-            <Layout>
-                <GameArea/>
-            </Layout>
-        </ThemeProvider>
+        <ApolloProvider client={apolloClient}>
+            <ThemeProvider>
+                <Layout>
+                    <GameArea/>
+                </Layout>
+            </ThemeProvider>
+        </ApolloProvider>
     );
 }
 

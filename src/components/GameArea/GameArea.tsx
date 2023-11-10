@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box} from '@mui/material';
 import styles from './GameArea.module.scss';
 import gameImage from '../../assets/images/moon.png';
@@ -6,21 +6,34 @@ import {GameModeSelector} from '../GameModeSelector/GameModeSelector';
 import {FlippedCard} from "../FlippedCard/FlippedCard";
 import Galatica from '../../assets/images/galactica.png'
 import Person from '../../assets/images/person.png'
-import {GameMode} from "../../models/types";
+import PersonBattle from '../../assets/images/personBattle.png'
+import StarshipBattle from '../../assets/images/starship.png'
+import {DuelResult, GameMode, RandomEntityDuelQuery} from "../../models/types";
 import PlayButton from "../PlayButton/PlayButton";
+import {useLazyQuery, useQuery} from '@apollo/client';
+import {RANDOM_ENTITY_DUEL} from "../../services/queries";
 
 export const GameArea = () => {
+    const [getBattleResult, {data, loading, error}] = useLazyQuery<RandomEntityDuelQuery>(RANDOM_ENTITY_DUEL, {
+        variables: {resourceType: "PERSON"},
+    });
+    const [formattedJson, setFormattedJson] = useState<DuelResult | null>(null);
     const [gameMode, setGameMode] = useState<GameMode>(GameMode.Person);
     const [isBouncing, setIsBouncing] = useState(false);
 
     const handleBounceEnd = () => {
-        console.log("->a ", );
-        setIsBouncing(false); // Stop the bounce animation
+        setIsBouncing(false);
     };
 
     const handleFlip = () => {
-        setIsBouncing(true); // Start the bounce animation
+        getBattleResult()
+        setIsBouncing(true);
     };
+    useEffect(() => {
+        if (data && !loading && !error) {
+            setFormattedJson(data.randomEntityDuel);
+        }
+    }, [data, loading, error]);
 
     return (
         <Box
@@ -42,19 +55,19 @@ export const GameArea = () => {
             >
                 {gameMode === GameMode.Person && (
                     <>
-                        <FlippedCard frontImage={Person} backContent="Person Details" onBounceEnd={handleBounceEnd}
-                                     isBouncing={isBouncing}/>
-                        <FlippedCard frontImage={Person} backContent="Person Details" onBounceEnd={handleBounceEnd}
-                                     isBouncing={isBouncing}/>
+                        <FlippedCard frontImage={Person} backImage={PersonBattle} onBounceEnd={handleBounceEnd}
+                                     isBouncing={isBouncing} formattedJson={formattedJson?.player1}/>
+                        <FlippedCard frontImage={Person} backImage={PersonBattle} onBounceEnd={handleBounceEnd}
+                                     isBouncing={isBouncing} formattedJson={formattedJson?.player2}/>
                     </>
                 )}
 
                 {gameMode === GameMode.Starship && (
                     <>
-                        <FlippedCard frontImage={Galatica} backContent="Person Details" onBounceEnd={handleBounceEnd}
-                                     isBouncing={isBouncing}/>
-                        <FlippedCard frontImage={Galatica} backContent="Person Details" onBounceEnd={handleBounceEnd}
-                                     isBouncing={isBouncing}/>
+                        <FlippedCard frontImage={Galatica} backImage={StarshipBattle} onBounceEnd={handleBounceEnd}
+                                     isBouncing={isBouncing} formattedJson={formattedJson?.player1}/>
+                        <FlippedCard frontImage={Galatica} backImage={StarshipBattle} onBounceEnd={handleBounceEnd}
+                                     isBouncing={isBouncing} formattedJson={formattedJson?.player2}/>
                     </>
                 )}
             </Box>

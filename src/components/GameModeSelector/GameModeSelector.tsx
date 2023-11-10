@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {ButtonGroup, Button} from '@mui/material';
 import {GameMode} from "../../models/types";
 
@@ -10,12 +10,11 @@ export const GameModeSelector: React.FC<GameModeSelectorProps> = ({setGameMode})
 
 
     useEffect(() => {
-        // Load the game mode from localStorage on component mount
         const savedMode = localStorage.getItem('gameMode') as GameMode;
         if (savedMode) {
             setGameMode(savedMode);
         }
-    }, []);
+    }, [setGameMode]);
 
     const handleModeChange = (mode: GameMode) => {
         localStorage.setItem('gameMode', mode);
