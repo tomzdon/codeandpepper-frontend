@@ -1,8 +1,3 @@
-export enum GameMode {
-    Person = 'Person',
-    Starship = 'Starship',
-}
-
 export enum ResourceType {
     PERSON = "PERSON",
     STARSHIP = "STARSHIP",

@@ -1,7 +1,7 @@
-import React, {useRef, useState, useEffect} from 'react';
+import React, {useRef, useState, useEffect, useMemo} from 'react';
 import {Card, CardActionArea, CardMedia, CardContent, Typography} from '@mui/material';
 import styles from './FlippedCard.module.scss';
-import { Entity} from "../../models/types";
+import {Entity} from "../../models/types";
 
 interface FlippedCardProps {
     frontImage: string;
@@ -44,6 +44,20 @@ export const FlippedCard: React.FC<FlippedCardProps> = ({
 
     const cardClassName = `${styles.flipCardInner} ${isBouncing ? styles.flipCardBounce : ''} ${isFlipped ? styles.flipCardFlipped : ''}`;
 
+    const renderEntityDetails = useMemo(() => {
+        if (!formattedJson) {
+            return null;
+        }
+
+        if (formattedJson.__typename === "Person") {
+            return <Typography>{`Mass: ${formattedJson.mass}`}</Typography>;
+        } else if (formattedJson.__typename === "Starship") {
+            return <Typography>{`Crew: ${formattedJson.crew}`}</Typography>;
+        }
+
+        return null;
+    }, [formattedJson]);
+
     return (
         <div className={styles.flipCardContainer}>
             <div ref={cardRef} className={cardClassName} onAnimationEnd={onBounceEnd}>
@@ -62,10 +76,11 @@ export const FlippedCard: React.FC<FlippedCardProps> = ({
                             component="img"
                             image={backImage}
                             alt="Back Side"
+                            style={{opacity: 0.8}}
                         />
-                    <Typography className={styles.overlayText} component="p">
-                        {formattedJson?.name}
-                    </Typography>
+                        <Typography className={styles.overlayText} component="p">
+                            {renderEntityDetails}
+                        </Typography>
                     </div>
                 </Card>
             </div>

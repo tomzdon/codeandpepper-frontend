@@ -1,8 +1,8 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 export const RANDOM_ENTITY_DUEL = gql`
-    query MyQuery {
-        randomEntityDuel(resourceType: PERSON) {
+    query MyQuery($resourceType: ResourceType!) {
+        randomEntityDuel(resourceType: $resourceType) {
             player1 {
                 ... on Person {
                     id

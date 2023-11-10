@@ -1,30 +1,30 @@
 import React, {useEffect} from 'react';
 import {ButtonGroup, Button} from '@mui/material';
-import {GameMode} from "../../models/types";
+import { ResourceType} from "../../models/types";
 
 interface GameModeSelectorProps {
-    setGameMode: (gameMode: GameMode) => void
+    setGameMode: (gameMode: ResourceType) => void
 }
 
 export const GameModeSelector: React.FC<GameModeSelectorProps> = ({setGameMode}) => {
 
 
     useEffect(() => {
-        const savedMode = localStorage.getItem('gameMode') as GameMode;
+        const savedMode = localStorage.getItem('gameMode') as ResourceType;
         if (savedMode) {
             setGameMode(savedMode);
         }
     }, [setGameMode]);
 
-    const handleModeChange = (mode: GameMode) => {
+    const handleModeChange = (mode: ResourceType) => {
         localStorage.setItem('gameMode', mode);
         setGameMode(mode);
     };
 
     return (
         <ButtonGroup variant="contained" aria-label="outlined primary button group">
-            <Button onClick={() => handleModeChange(GameMode.Person)}>Person</Button>
-            <Button onClick={() => handleModeChange(GameMode.Starship)}>Starship</Button>
+            <Button onClick={() => handleModeChange(ResourceType.PERSON)}>Person</Button>
+            <Button onClick={() => handleModeChange(ResourceType.STARSHIP)}>Starship</Button>
         </ButtonGroup>
     );
 };
