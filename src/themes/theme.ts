@@ -1,40 +1,38 @@
-import {createTheme} from '@mui/material/styles';
-import {PaletteMode} from "@mui/material";
+import { createTheme } from '@mui/material/styles';
 
 const baseTheme = createTheme({
-    typography: {
-        fontFamily: "'Work Sans', sans-serif",
-        fontSize: 14,
-        fontWeightLight: 300, // Work Sans
-        fontWeightRegular: 400, // Work Sans
-        fontWeightMedium: 700, // Roboto Condensed
-    }
-})
+  typography: {
+    fontFamily: "'Work Sans', sans-serif",
+    fontSize: 14,
+    fontWeightLight: 300,
+    fontWeightRegular: 400,
+    fontWeightMedium: 700,
+  },
+});
 
 const darkTheme = createTheme({
-    ...baseTheme,
-    palette: {
-        mode: "dark",
-        primary: {
-            main: "#26a27b"
-        },
-        secondary: {
-            main: "#fafafa"
-        }
-    }
-})
+  ...baseTheme,
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#26a27b',
+    },
+    secondary: {
+      main: '#fafafa',
+    },
+  },
+});
 const lightTheme = createTheme({
-    ...baseTheme,
-    palette: {
-        mode: "light",
-        primary: {
-            main: "#fafafa"
-        },
-        secondary: {
-            main: "#26a27b"
-        }
-    }
-})
+  ...baseTheme,
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#fafafa',
+    },
+    secondary: {
+      main: '#26a27b',
+    },
+  },
+});
 
-export {darkTheme, lightTheme}
-
+export { darkTheme, lightTheme };
