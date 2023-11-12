@@ -14,7 +14,7 @@ export const App = () => {
         <ThemeProvider>
           <Layout>
             <Routes>
-              <Route path="/carts" element={<Cards />}></Route>
+              <Route path="/cards" element={<Cards />}></Route>
               <Route path="/" element={<GameArea />}></Route>
             </Routes>
           </Layout>

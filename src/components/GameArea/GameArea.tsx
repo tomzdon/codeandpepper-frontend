@@ -15,8 +15,9 @@ import { ScoreBoard } from '../ScoreBoard/ScoreBoard';
 import { ResourceType } from '../../models/types';
 
 import type { DuelResult, RandomEntityDuelQuery } from '../../models/types';
+import { TypedMemo } from '../../utils';
 
-export const GameArea = () => {
+const GameAreaComponent: React.FC = () => {
   const [gameResult, setGameResult] = useState<DuelResult | undefined>(undefined);
   const [gameMode, setGameMode] = useState<ResourceType>(ResourceType.PERSON);
   const [isBouncing, setIsBouncing] = useState(false);
@@ -59,14 +60,14 @@ export const GameArea = () => {
               backImage={PersonBattle}
               onBounceEnd={handleBounceEnd}
               isBouncing={isBouncing}
-              formattedJson={data?.randomEntityDuel?.player1}
+              entityDetails={data?.randomEntityDuel?.player1}
             />
             <FlippedCard
               frontImage={Person}
               backImage={PersonBattle}
               onBounceEnd={handleBounceEnd}
               isBouncing={isBouncing}
-              formattedJson={data?.randomEntityDuel?.player2}
+              entityDetails={data?.randomEntityDuel?.player2}
             />
           </>
         )}
@@ -78,20 +79,21 @@ export const GameArea = () => {
               backImage={StarshipBattle}
               onBounceEnd={handleBounceEnd}
               isBouncing={isBouncing}
-              formattedJson={data?.randomEntityDuel?.player1}
+              entityDetails={data?.randomEntityDuel?.player1}
             />
             <FlippedCard
               frontImage={Galatica}
               backImage={StarshipBattle}
               onBounceEnd={handleBounceEnd}
               isBouncing={isBouncing}
-              formattedJson={data?.randomEntityDuel?.player2}
+              entityDetails={data?.randomEntityDuel?.player2}
             />
           </>
         )}
       </Box>
-      <PlayButton onClick={handleFlip} />
-      {error && <span>{error.message}</span>}
+      <PlayButton data-testid="play-button" onClick={handleFlip} />
+      {error && <span data-testid="error">{error.message}</span>}
     </Box>
   );
 };
+export const GameArea = TypedMemo(GameAreaComponent);

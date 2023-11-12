@@ -1,21 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { TextField, Button } from '@mui/material';
 import type { Person } from '../../models/types';
+import { TypedMemo } from '../../utils';
 
 interface PersonFormProps {
   person?: Person;
   onSave: (data: Person) => void;
 }
 
-export const PersonForm: React.FC<PersonFormProps> = ({ person, onSave }) => {
-  const defaultFormData: Person = {
-    name: '',
-    birthYear: '',
-    gender: '',
-    height: 0,
-    mass: 0,
-    ...person,
-  };
+const PersonFormComponent: React.FC<PersonFormProps> = ({ person, onSave }) => {
+  const defaultFormData: Person = useMemo(
+    () => ({
+      name: '',
+      birthYear: '',
+      gender: '',
+      height: 0,
+      mass: 0,
+      ...person,
+    }),
+    [person]
+  );
 
   const [formData, setFormData] = useState<Person>(defaultFormData);
 
@@ -32,20 +36,23 @@ export const PersonForm: React.FC<PersonFormProps> = ({ person, onSave }) => {
     } else {
       setFormData(defaultFormData);
     }
-  }, [person]);
+  }, [person, defaultFormData]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
-  };
+  }, []);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onSave(formData);
-  };
+  const handleSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      onSave(formData);
+    },
+    [formData, onSave]
+  );
 
   return (
     <form onSubmit={handleSubmit}>
@@ -90,3 +97,5 @@ export const PersonForm: React.FC<PersonFormProps> = ({ person, onSave }) => {
     </form>
   );
 };
+
+export const PersonForm = TypedMemo(PersonFormComponent);

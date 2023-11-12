@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect } from 'react';
 import { ButtonGroup, Button } from '@mui/material';
 import { ResourceType } from '../../models/types';
+import { TypedMemo } from '../../utils';
 
 interface GameModeSelectorProps {
   setGameMode: (gameMode: ResourceType) => void;
   gameMode: ResourceType;
 }
 
-export const GameModeSelector: React.FC<GameModeSelectorProps> = ({ setGameMode, gameMode }) => {
+const GameModeSelectorComponent: React.FC<GameModeSelectorProps> = ({ setGameMode, gameMode }) => {
   useEffect(() => {
     const savedMode = localStorage.getItem('gameMode') as ResourceType;
     if (savedMode) {
@@ -18,12 +19,12 @@ export const GameModeSelector: React.FC<GameModeSelectorProps> = ({ setGameMode,
   const handleModeChangePerson = useCallback(() => {
     localStorage.setItem('gameMode', ResourceType.PERSON);
     setGameMode(ResourceType.PERSON);
-  }, []);
+  }, [setGameMode]);
 
   const handleModeChangeStarship = useCallback(() => {
     localStorage.setItem('gameMode', ResourceType.STARSHIP);
     setGameMode(ResourceType.STARSHIP);
-  }, []);
+  }, [setGameMode]);
 
   return (
     <ButtonGroup variant="contained" aria-label="outlined primary button group">
@@ -42,3 +43,5 @@ export const GameModeSelector: React.FC<GameModeSelectorProps> = ({ setGameMode,
     </ButtonGroup>
   );
 };
+
+export const GameModeSelector = TypedMemo(GameModeSelectorComponent);

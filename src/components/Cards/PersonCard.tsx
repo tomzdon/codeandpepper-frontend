@@ -7,24 +7,25 @@ import { GenericModal } from '../GenericModal/GenericModal';
 import { PersonForm } from '../Forms/PersonForm';
 import { useMutation } from '@apollo/client';
 import { DELETE_PERSON_MUTATION, GET_PEOPLE, UPDATE_PERSON_MUTATION } from '../../services/queries';
+import { TypedMemo } from '../../utils';
 
 interface PersonCardProps {
   person: Person;
 }
 
-export const PersonCard: React.FC<PersonCardProps> = ({ person }) => {
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+const PersonCardComponent: React.FC<PersonCardProps> = ({ person }) => {
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [updatePerson] = useMutation(UPDATE_PERSON_MUTATION);
   const [deletePerson] = useMutation(DELETE_PERSON_MUTATION);
 
-  const handleEdit = () => {
+  const handleEdit = useCallback(() => {
     setIsEditModalOpen(true);
-  };
+  }, []);
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     setIsDeleteModalOpen(true);
-  };
+  }, []);
 
   const closeDeleteModal = useCallback(() => {
     setIsDeleteModalOpen(false);
@@ -51,7 +52,7 @@ export const PersonCard: React.FC<PersonCardProps> = ({ person }) => {
       refetchQueries: [{ query: GET_PEOPLE }],
     }).catch(console.error);
     closeDeleteModal();
-  }, [closeDeleteModal, deletePerson]);
+  }, [closeDeleteModal, deletePerson, person.id]);
 
   return (
     <>
@@ -77,12 +78,14 @@ export const PersonCard: React.FC<PersonCardProps> = ({ person }) => {
         </CardActions>
         <CardContent>
           <Typography variant="h5">{person.name}</Typography>
-          <Typography color="textSecondary">Rok urodzenia: {person.birthYear}</Typography>
-          <Typography color="textSecondary">Płeć: {person.gender}</Typography>
-          <Typography color="textSecondary">Wzrost: {person.height} cm</Typography>
-          <Typography color="textSecondary">Masa: {person.mass} kg</Typography>
+          <Typography color="textSecondary">Birth year: {person.birthYear}</Typography>
+          <Typography color="textSecondary">Gender: {person.gender}</Typography>
+          <Typography color="textSecondary">Height: {person.height} cm</Typography>
+          <Typography color="textSecondary">Mass: {person.mass} kg</Typography>
         </CardContent>
       </Card>
     </>
   );
 };
+
+export const PersonCard = TypedMemo(PersonCardComponent);

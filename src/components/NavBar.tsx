@@ -14,8 +14,8 @@ export const NavBar: React.FC = () => {
             Galactic Showdown
           </Link>
         </Typography>
-        <Link to="/carts" style={{ textDecoration: 'none', color: 'inherit', marginRight: '20px' }}>
-          Carts
+        <Link to="/cards" style={{ textDecoration: 'none', color: 'inherit', marginRight: '20px' }}>
+          Cards
         </Link>
         <Switch checked={darkMode} onChange={toggleMode} color="default" />
       </Toolbar>

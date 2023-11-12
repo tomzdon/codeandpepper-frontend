@@ -1,17 +1,18 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import styles from './PlayButton.module.scss';
+import { TypedMemo } from '../../utils';
 
 interface PlayButtonProps {
   onClick: () => void;
 }
 
-export const PlayButton: React.FC<PlayButtonProps> = ({ onClick }) => {
+const PlayButtonComponent: React.FC<PlayButtonProps> = ({ onClick }) => {
   return (
-    <Button className={styles.playButton} onClick={onClick} variant="contained">
+    <Button data-testid="play-button" className={styles.playButton} onClick={onClick} variant="contained">
       Play
     </Button>
   );
 };
 
-export default PlayButton;
+export const PlayButton = TypedMemo(PlayButtonComponent);

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Box, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { TypedMemo } from '../../utils';
 
 interface GenericModalProps {
   open: boolean;
@@ -9,7 +10,7 @@ interface GenericModalProps {
   children: React.ReactNode;
 }
 
-export const GenericModal: React.FC<GenericModalProps> = ({ open, onClose, title, children }) => {
+const GenericModalComponent: React.FC<GenericModalProps> = ({ open, onClose, title, children }) => {
   return (
     <Modal open={open} onClose={onClose}>
       <Box
@@ -33,3 +34,5 @@ export const GenericModal: React.FC<GenericModalProps> = ({ open, onClose, title
     </Modal>
   );
 };
+
+export const GenericModal = TypedMemo(GenericModalComponent);

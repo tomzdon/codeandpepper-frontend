@@ -6,6 +6,8 @@
     "@apollo/client": "^3.8.7",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@graphql-tools/mock": "^9.0.0",
+    "@graphql-tools/schema": "^10.0.0",
     "@mui/icons-material": "^5.14.16",
     "@mui/material": "^5.14.17",
     "@testing-library/jest-dom": "^5.17.0",
@@ -48,6 +50,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    }
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.10.0",

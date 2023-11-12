@@ -7,24 +7,25 @@ import { useMutation } from '@apollo/client';
 import { DELETE_STRARSHIP_MUTATION, GET_STARSHIPS, UPDATE_STARSHIP_MUTATION } from '../../services/queries';
 import { GenericModal } from '../GenericModal/GenericModal';
 import { StarshipForm } from '../Forms/StarshipForm';
+import { TypedMemo } from '../../utils';
 
 interface StarshipCardProps {
   starship: Starship;
 }
 
-export const StarshipCard: React.FC<StarshipCardProps> = ({ starship }) => {
+const StarshipCardComponent: React.FC<StarshipCardProps> = ({ starship }) => {
   const [updateStarship] = useMutation(UPDATE_STARSHIP_MUTATION);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [deleteStarship] = useMutation(DELETE_STRARSHIP_MUTATION);
 
-  const handleEdit = () => {
+  const handleEdit = useCallback(() => {
     setIsEditModalOpen(true);
-  };
+  }, []);
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     setIsDeleteModalOpen(true);
-  };
+  }, []);
 
   const closeDeleteModal = useCallback(() => {
     setIsDeleteModalOpen(false);
@@ -34,26 +35,28 @@ export const StarshipCard: React.FC<StarshipCardProps> = ({ starship }) => {
     setIsEditModalOpen(false);
   }, []);
 
-  const saveUpdate = useCallback((updatedStarshipData: Starship) => {
-    updateStarship({
-      variables: { input: updatedStarshipData },
-      onCompleted: () => {
-        closeEditModal();
-      },
-      refetchQueries: [{ query: GET_STARSHIPS }],
-    }).catch(console.error);
-  }, []);
+  const saveUpdate = useCallback(
+    (updatedStarshipData: Starship) => {
+      updateStarship({
+        variables: { input: updatedStarshipData },
+        onCompleted: () => {
+          closeEditModal();
+        },
+        refetchQueries: [{ query: GET_STARSHIPS }],
+      }).catch(console.error);
+    },
+    [closeEditModal, updateStarship]
+  );
 
   const handleDeleteConfirm = useCallback(() => {
     deleteStarship({
       variables: { input: { id: starship.id } },
       refetchQueries: [{ query: GET_STARSHIPS }],
-      awaitRefetchQueries: true,
       onCompleted: () => {
         closeDeleteModal();
       },
     }).catch(console.error);
-  }, [closeDeleteModal, deleteStarship]);
+  }, [closeDeleteModal, deleteStarship, starship.id]);
 
   return (
     <>
@@ -80,10 +83,12 @@ export const StarshipCard: React.FC<StarshipCardProps> = ({ starship }) => {
         <CardContent>
           <Typography variant="h5">{starship.name}</Typography>
           <Typography color="textSecondary">Model: {starship.model}</Typography>
-          <Typography color="textSecondary">Załoga: {starship.crew}</Typography>
-          <Typography color="textSecondary">Długość: {starship.length} m</Typography>
+          <Typography color="textSecondary">Crew: {starship.crew}</Typography>
+          <Typography color="textSecondary">Length: {starship.length} m</Typography>
         </CardContent>
       </Card>
     </>
   );
 };
+
+export const StarshipCard = TypedMemo(StarshipCardComponent);

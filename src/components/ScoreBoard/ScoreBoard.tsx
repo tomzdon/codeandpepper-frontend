@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 
 import type { DuelResult } from '../../models/types';
+import { TypedMemo } from '../../utils';
 
 interface ScoreBoardProps {
   result: DuelResult | undefined;
 }
 
-export const ScoreBoard: React.FC<ScoreBoardProps> = ({ result }) => {
+const ScoreBoardComponent: React.FC<ScoreBoardProps> = ({ result }) => {
   const [player1Score, setPlayer1Score] = useState(() => {
     return parseInt(localStorage.getItem('player1Score') ?? '0', 10);
   });
@@ -17,16 +18,16 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({ result }) => {
   });
 
   useEffect(() => {
-    if (result === undefined || result.winner === null || result.player1 === null || result.player2 === null) {
+    if (result === undefined) {
       return;
     }
-    if (result.winner.id === result.player1.id) {
+    if (result.winner?.id === result.player1?.id) {
       setPlayer1Score((prevScore) => {
         const newScore = prevScore + 1;
         localStorage.setItem('player1Score', newScore.toString());
         return newScore;
       });
-    } else if (result.winner.id === result.player2.id) {
+    } else if (result.winner?.id === result.player2?.id) {
       setPlayer2Score((prevScore) => {
         const newScore = prevScore + 1;
         localStorage.setItem('player2Score', newScore.toString());
@@ -55,3 +56,5 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({ result }) => {
     </Box>
   );
 };
+
+export const ScoreBoard = TypedMemo(ScoreBoardComponent);

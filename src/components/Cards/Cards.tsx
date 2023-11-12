@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Switch, CircularProgress, Pagination, FormControlLabel, Box, Grid, Button } from '@mui/material';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useMutation, useLazyQuery } from '@apollo/client';
 import { CREATE_PERSON_MUTATION, CREATE_STARSHIP_MUTATION, GET_PEOPLE, GET_STARSHIPS } from '../../services/queries';
-import { StarshipCard } from './StartshipCart';
+import { StarshipCard } from './StartshipCard';
 import { PersonCard } from './PersonCard';
-
 import type { Person, QueryData, Starship } from '../../models/types';
 import { GenericModal } from '../GenericModal/GenericModal';
 import { StarshipForm } from '../Forms/StarshipForm';
 import { PersonForm } from '../Forms/PersonForm';
+import { TypedMemo } from '../../utils';
 
-export const Cards: React.FC = () => {
+const CardsComponent: React.FC = () => {
   const [showStarships, setShowStarships] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [nextToken, setNextToken] = useState<string | undefined>(undefined);
@@ -20,9 +20,10 @@ export const Cards: React.FC = () => {
   const [createStarship] = useMutation(CREATE_STARSHIP_MUTATION);
   const [fetchData, { loading, error, data }] = useLazyQuery<QueryData>(showStarships ? GET_STARSHIPS : GET_PEOPLE);
 
-  const openCreateCardModal = useCallback(() => {
-    setIsCreateModalOpen(true);
+  const toggleCreateCardModal = useCallback(() => {
+    setIsCreateModalOpen((prev) => !prev);
   }, []);
+
   const closeCreateCardModal = useCallback(() => {
     setIsCreateModalOpen(false);
   }, []);
@@ -34,35 +35,40 @@ export const Cards: React.FC = () => {
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
     setNextToken(showStarships ? data?.listStarships.nextToken : data?.listPeople.nextToken);
-
     fetchData({ variables: { limit: 3, nextToken } }).catch(console.error);
   };
 
-  const handleChangeCard = useCallback(() => {
-    setShowStarships(!showStarships);
+  const handleChangeCard = () => {
+    setShowStarships((prev) => !prev);
     setPage(1);
     setNextToken(undefined);
-  }, [setShowStarships, showStarships]);
-
-  const handleCreatePerson = (newPersonData: Omit<Person, 'id'>) => {
-    createPerson({
-      variables: { input: newPersonData },
-      onCompleted: () => {
-        closeCreateCardModal();
-        fetchData().catch(console.error);
-      },
-    }).catch(console.error);
   };
 
-  const handleCreateStarship = (newStarshipData: Omit<Starship, 'id'>) => {
-    createStarship({
-      variables: { input: newStarshipData },
-      onCompleted: () => {
-        closeCreateCardModal();
-        fetchData().catch(console.error);
-      },
-    }).catch(console.error);
-  };
+  const handleCreatePerson = useCallback(
+    (newPersonData: Omit<Person, 'id'>) => {
+      createPerson({
+        variables: { input: newPersonData },
+        onCompleted: () => {
+          closeCreateCardModal();
+          fetchData().catch(console.error);
+        },
+      }).catch(console.error);
+    },
+    [closeCreateCardModal, createPerson, fetchData]
+  );
+
+  const handleCreateStarship = useCallback(
+    (newStarshipData: Omit<Starship, 'id'>) => {
+      createStarship({
+        variables: { input: newStarshipData },
+        onCompleted: () => {
+          closeCreateCardModal();
+          fetchData().catch(console.error);
+        },
+      }).catch(console.error);
+    },
+    [closeCreateCardModal, createStarship, fetchData]
+  );
 
   if (loading) return <CircularProgress />;
   if (error) return <p>Error: {error.message}</p>;
@@ -70,7 +76,7 @@ export const Cards: React.FC = () => {
   const items = showStarships ? data?.listStarships.items : data?.listPeople.items;
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-      <Button variant="contained" color="primary" onClick={openCreateCardModal} sx={{ marginBottom: '20px' }}>
+      <Button variant="contained" color="primary" onClick={toggleCreateCardModal} sx={{ marginBottom: '20px' }}>
         Create New {showStarships ? 'Starship' : 'Person'}
       </Button>
       <FormControlLabel
@@ -87,7 +93,7 @@ export const Cards: React.FC = () => {
       <Pagination count={3} page={page} onChange={handlePageChange} sx={{ marginTop: '20px' }} />
       <GenericModal
         open={isCreateModalOpen}
-        onClose={closeCreateCardModal}
+        onClose={toggleCreateCardModal}
         title={`Create New ${showStarships ? 'Starship' : 'Person'}`}
       >
         {showStarships ? <StarshipForm onSave={handleCreateStarship} /> : <PersonForm onSave={handleCreatePerson} />}
@@ -95,3 +101,5 @@ export const Cards: React.FC = () => {
     </Box>
   );
 };
+
+export const Cards = TypedMemo(CardsComponent);

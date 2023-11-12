@@ -3,21 +3,22 @@ import { Card, CardActionArea, CardMedia, Typography } from '@mui/material';
 import styles from './FlippedCard.module.scss';
 
 import type { Entity } from '../../models/types';
+import { TypedMemo } from '../../utils';
 
 interface FlippedCardProps {
   frontImage: string;
   backImage: string;
   isBouncing: boolean;
   onBounceEnd: () => void;
-  formattedJson: Entity | undefined;
+  entityDetails: Entity | undefined;
 }
 
-export const FlippedCard: React.FC<FlippedCardProps> = ({
+const FlippedCardComponent: React.FC<FlippedCardProps> = ({
   frontImage,
   backImage,
   isBouncing,
   onBounceEnd,
-  formattedJson,
+  entityDetails,
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -47,36 +48,37 @@ export const FlippedCard: React.FC<FlippedCardProps> = ({
   }`;
 
   const renderEntityDetails = useMemo(() => {
-    if (formattedJson === undefined || formattedJson === null) {
+    if (entityDetails === undefined || entityDetails === null) {
       return null;
     }
 
-    if (formattedJson.__typename === 'Person') {
-      return <Typography>{`Mass: ${formattedJson.mass}`}</Typography>;
-    } else if (formattedJson.__typename === 'Starship') {
-      return <Typography>{`Crew: ${formattedJson.crew}`}</Typography>;
+    switch (entityDetails.__typename) {
+      case 'Person':
+        return <Typography data-testid="entity-mass">{`Mass: ${entityDetails.mass}`}</Typography>;
+      case 'Starship':
+        return <Typography data-testid="entity-crew">{`Crew: ${entityDetails.crew}`}</Typography>;
+      default:
+        return null;
     }
-
-    return null;
-  }, [formattedJson]);
+  }, [entityDetails]);
 
   return (
     <div className={styles.flipCardContainer}>
-      <div ref={cardRef} className={cardClassName} onAnimationEnd={onBounceEnd}>
+      <div ref={cardRef} className={cardClassName} onAnimationEnd={onBounceEnd} data-testid="flip-card">
         <Card className={styles.cardFront}>
           <CardActionArea>
-            <CardMedia component="img" image={frontImage} alt="Front Side" />
+            <CardMedia component="img" image={frontImage} alt="Front Side" data-testid="front-image" />
           </CardActionArea>
         </Card>
         <Card className={styles.cardBack}>
           <div className={styles.imageContainer}>
             <CardMedia component="img" image={backImage} alt="Back Side" style={{ opacity: 0.8 }} />
-            <Typography className={styles.overlayText} component="p">
-              {renderEntityDetails}
-            </Typography>
+            <div className={styles.overlayText}>{renderEntityDetails}</div>
           </div>
         </Card>
       </div>
     </div>
   );
 };
+
+export const FlippedCard = TypedMemo(FlippedCardComponent);

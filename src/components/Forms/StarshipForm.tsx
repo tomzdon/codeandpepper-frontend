@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { TextField, Button } from '@mui/material';
 import type { Starship } from '../../models/types';
 
@@ -8,13 +8,16 @@ interface StarshipFormProps {
 }
 
 export const StarshipForm: React.FC<StarshipFormProps> = ({ starship, onSave }) => {
-  const defaultFormData = {
-    name: '',
-    model: '',
-    crew: '',
-    length: 0,
-    ...starship,
-  };
+  const defaultFormData = useMemo(
+    () => ({
+      name: '',
+      model: '',
+      crew: '',
+      length: 0,
+      ...starship,
+    }),
+    [starship]
+  );
   const [formData, setFormData] = useState<Starship>(defaultFormData);
 
   useEffect(() => {
@@ -28,20 +31,23 @@ export const StarshipForm: React.FC<StarshipFormProps> = ({ starship, onSave }) 
     } else {
       setFormData(defaultFormData);
     }
-  }, [starship]);
+  }, [starship, defaultFormData]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
-  };
+  }, []);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onSave(formData);
-  };
+  const handleSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      onSave(formData);
+    },
+    [formData, onSave]
+  );
 
   return (
     <form onSubmit={handleSubmit}>
