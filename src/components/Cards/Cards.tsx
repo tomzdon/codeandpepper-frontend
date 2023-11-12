@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Switch, CircularProgress, Pagination, FormControlLabel, Box, Grid, Button } from '@mui/material';
-import { useMutation, useLazyQuery } from '@apollo/client';
+import React, { useCallback, useState } from 'react';
+import { Switch, CircularProgress, FormControlLabel, Box, Grid, Button } from '@mui/material';
+import { useMutation, useQuery } from '@apollo/client';
 import { CREATE_PERSON_MUTATION, CREATE_STARSHIP_MUTATION, GET_PEOPLE, GET_STARSHIPS } from '../../services/queries';
 import { StarshipCard } from './StartshipCard';
 import { PersonCard } from './PersonCard';
@@ -12,13 +12,11 @@ import { TypedMemo } from '../../utils';
 
 const CardsComponent: React.FC = () => {
   const [showStarships, setShowStarships] = useState<boolean>(false);
-  const [page, setPage] = useState<number>(1);
-  const [nextToken, setNextToken] = useState<string | undefined>(undefined);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const [createPerson] = useMutation(CREATE_PERSON_MUTATION);
   const [createStarship] = useMutation(CREATE_STARSHIP_MUTATION);
-  const [fetchData, { loading, error, data }] = useLazyQuery<QueryData>(showStarships ? GET_STARSHIPS : GET_PEOPLE);
+  const { loading, error, data } = useQuery<QueryData>(showStarships ? GET_STARSHIPS : GET_PEOPLE);
 
   const toggleCreateCardModal = useCallback(() => {
     setIsCreateModalOpen((prev) => !prev);
@@ -28,46 +26,34 @@ const CardsComponent: React.FC = () => {
     setIsCreateModalOpen(false);
   }, []);
 
-  useEffect(() => {
-    fetchData({ variables: { limit: 3, nextToken } }).catch(console.error);
-  }, [fetchData, nextToken, showStarships]);
-
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-    setNextToken(showStarships ? data?.listStarships.nextToken : data?.listPeople.nextToken);
-    fetchData({ variables: { limit: 3, nextToken } }).catch(console.error);
-  };
-
   const handleChangeCard = () => {
     setShowStarships((prev) => !prev);
-    setPage(1);
-    setNextToken(undefined);
   };
 
   const handleCreatePerson = useCallback(
     (newPersonData: Omit<Person, 'id'>) => {
       createPerson({
         variables: { input: newPersonData },
+        refetchQueries: [{ query: GET_PEOPLE }],
         onCompleted: () => {
           closeCreateCardModal();
-          fetchData().catch(console.error);
         },
       }).catch(console.error);
     },
-    [closeCreateCardModal, createPerson, fetchData]
+    [closeCreateCardModal, createPerson]
   );
 
   const handleCreateStarship = useCallback(
     (newStarshipData: Omit<Starship, 'id'>) => {
       createStarship({
         variables: { input: newStarshipData },
+        refetchQueries: [{ query: GET_STARSHIPS }],
         onCompleted: () => {
           closeCreateCardModal();
-          fetchData().catch(console.error);
         },
       }).catch(console.error);
     },
-    [closeCreateCardModal, createStarship, fetchData]
+    [closeCreateCardModal, createStarship]
   );
 
   if (loading) return <CircularProgress />;
@@ -90,7 +76,6 @@ const CardsComponent: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-      <Pagination count={3} page={page} onChange={handlePageChange} sx={{ marginTop: '20px' }} />
       <GenericModal
         open={isCreateModalOpen}
         onClose={toggleCreateCardModal}

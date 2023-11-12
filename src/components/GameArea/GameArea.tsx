@@ -8,7 +8,6 @@ import Galatica from '../../assets/images/galactica.png';
 import Person from '../../assets/images/person.png';
 import PersonBattle from '../../assets/images/personBattle.png';
 import StarshipBattle from '../../assets/images/starship.png';
-import PlayButton from '../PlayButton/PlayButton';
 import { useLazyQuery } from '@apollo/client';
 import { RANDOM_ENTITY_DUEL } from '../../services/queries';
 import { ScoreBoard } from '../ScoreBoard/ScoreBoard';
@@ -16,6 +15,7 @@ import { ResourceType } from '../../models/types';
 
 import type { DuelResult, RandomEntityDuelQuery } from '../../models/types';
 import { TypedMemo } from '../../utils';
+import { PlayButton } from '../PlayButton/PlayButton';
 
 const GameAreaComponent: React.FC = () => {
   const [gameResult, setGameResult] = useState<DuelResult | undefined>(undefined);
@@ -60,14 +60,14 @@ const GameAreaComponent: React.FC = () => {
               backImage={PersonBattle}
               onBounceEnd={handleBounceEnd}
               isBouncing={isBouncing}
-              entityDetails={data?.randomEntityDuel?.player1}
+              entityDetails={gameResult?.player1}
             />
             <FlippedCard
               frontImage={Person}
               backImage={PersonBattle}
               onBounceEnd={handleBounceEnd}
               isBouncing={isBouncing}
-              entityDetails={data?.randomEntityDuel?.player2}
+              entityDetails={gameResult?.player2}
             />
           </>
         )}
@@ -79,14 +79,14 @@ const GameAreaComponent: React.FC = () => {
               backImage={StarshipBattle}
               onBounceEnd={handleBounceEnd}
               isBouncing={isBouncing}
-              entityDetails={data?.randomEntityDuel?.player1}
+              entityDetails={gameResult?.player1}
             />
             <FlippedCard
               frontImage={Galatica}
               backImage={StarshipBattle}
               onBounceEnd={handleBounceEnd}
               isBouncing={isBouncing}
-              entityDetails={data?.randomEntityDuel?.player2}
+              entityDetails={gameResult?.player2}
             />
           </>
         )}

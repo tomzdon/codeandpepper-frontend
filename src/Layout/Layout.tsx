@@ -40,7 +40,7 @@ export const Layout: React.FC<PropsWithChildren> = ({ children }) => {
           }}
         >
           <a
-            href="https://snappywebdesign.net/"
+            href="https://tomaszwlodarczyk.netlify.app/"
             style={{
               textDecoration: 'none',
               color: '#FFF',
