@@ -8,23 +8,25 @@ import Galatica from '../../assets/images/galactica.png';
 import Person from '../../assets/images/person.png';
 import PersonBattle from '../../assets/images/personBattle.png';
 import StarshipBattle from '../../assets/images/starship.png';
-import { DuelResult, RandomEntityDuelQuery, ResourceType } from '../../models/types';
 import PlayButton from '../PlayButton/PlayButton';
 import { useLazyQuery } from '@apollo/client';
 import { RANDOM_ENTITY_DUEL } from '../../services/queries';
 import { ScoreBoard } from '../ScoreBoard/ScoreBoard';
+import { ResourceType } from '../../models/types';
+
+import type { DuelResult, RandomEntityDuelQuery } from '../../models/types';
 
 export const GameArea = () => {
   const [gameResult, setGameResult] = useState<DuelResult | undefined>(undefined);
   const [gameMode, setGameMode] = useState<ResourceType>(ResourceType.PERSON);
   const [isBouncing, setIsBouncing] = useState(false);
-  const [getBattleResult, { data, loading, error }] = useLazyQuery<RandomEntityDuelQuery>(RANDOM_ENTITY_DUEL, {
+  const [getBattleResult, { data, error }] = useLazyQuery<RandomEntityDuelQuery>(RANDOM_ENTITY_DUEL, {
     fetchPolicy: 'no-cache',
   });
 
-  const handleBounceEnd = () => {
+  const handleBounceEnd = useCallback(() => {
     setIsBouncing(false);
-  };
+  }, []);
 
   const handleFlip = useCallback(() => {
     getBattleResult({ variables: { resourceType: gameMode } }).catch(console.error);
@@ -48,7 +50,7 @@ export const GameArea = () => {
     >
       <ScoreBoard result={gameResult} />
       <img src={gameImage} alt="Game" className={styles.gameImage} />
-      <GameModeSelector setGameMode={setGameMode} />
+      <GameModeSelector setGameMode={setGameMode} gameMode={gameMode} />
       <Box display="flex" justifyContent="center" alignItems="center" gap={2} className={styles.cardsContainer}>
         {gameMode === ResourceType.PERSON && (
           <>

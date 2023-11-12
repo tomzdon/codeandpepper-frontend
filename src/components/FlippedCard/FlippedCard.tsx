@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
-import { Card, CardActionArea, CardMedia, CardContent, Typography } from '@mui/material';
+import { Card, CardActionArea, CardMedia, Typography } from '@mui/material';
 import styles from './FlippedCard.module.scss';
-import { Entity } from '../../models/types';
+
+import type { Entity } from '../../models/types';
 
 interface FlippedCardProps {
   frontImage: string;
@@ -46,7 +47,7 @@ export const FlippedCard: React.FC<FlippedCardProps> = ({
   }`;
 
   const renderEntityDetails = useMemo(() => {
-    if (!formattedJson) {
+    if (formattedJson === undefined || formattedJson === null) {
       return null;
     }
 

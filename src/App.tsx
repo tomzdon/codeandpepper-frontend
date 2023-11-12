@@ -5,7 +5,7 @@ import { GameArea } from './components/GameArea/GameArea';
 import { ApolloProvider } from '@apollo/client';
 import { apolloClient } from './services/apolloClient';
 
-function App() {
+export const App = () => {
   return (
     <ApolloProvider client={apolloClient}>
       <ThemeProvider>
@@ -15,6 +15,6 @@ function App() {
       </ThemeProvider>
     </ApolloProvider>
   );
-}
+};
 
 export default App;

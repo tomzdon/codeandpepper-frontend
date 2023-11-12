@@ -3,7 +3,7 @@ export enum ResourceType {
   STARSHIP = 'STARSHIP',
 }
 
-export type Person = {
+export interface Person {
   __typename: 'Person';
   id: string;
   name: string;
@@ -11,25 +11,25 @@ export type Person = {
   gender: string;
   height: number;
   mass: number;
-};
+}
 
-export type Starship = {
+export interface Starship {
   __typename: 'Starship';
   id: string;
   name: string;
   model: string;
   length: number;
   crew: string;
-};
+}
 
 export type Entity = Person | Starship;
 
-export type DuelResult = {
+export interface DuelResult {
   player1: Entity;
   player2: Entity;
   winner: Entity;
-};
+}
 
-export type RandomEntityDuelQuery = {
+export interface RandomEntityDuelQuery {
   randomEntityDuel: DuelResult;
-};
+}

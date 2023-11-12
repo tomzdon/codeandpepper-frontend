@@ -1,7 +1,9 @@
-import React, { PropsWithChildren } from 'react';
+import React from 'react';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '../themes/ThemeContext';
 import { NavBar } from '../components/NavBar';
+
+import type { PropsWithChildren } from 'react';
 
 export const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
