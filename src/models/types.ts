@@ -4,8 +4,8 @@ export enum ResourceType {
 }
 
 export interface Person {
-  __typename: 'Person';
-  id: string;
+  __typename?: 'Person';
+  id?: string;
   name: string;
   birthYear: string;
   gender: string;
@@ -14,8 +14,8 @@ export interface Person {
 }
 
 export interface Starship {
-  __typename: 'Starship';
-  id: string;
+  __typename?: 'Starship';
+  id?: string;
   name: string;
   model: string;
   length: number;
@@ -32,4 +32,15 @@ export interface DuelResult {
 
 export interface RandomEntityDuelQuery {
   randomEntityDuel: DuelResult;
+}
+
+export interface QueryData {
+  listPeople: {
+    items: Person[];
+    nextToken: string;
+  };
+  listStarships: {
+    items: Starship[];
+    nextToken: string;
+  };
 }

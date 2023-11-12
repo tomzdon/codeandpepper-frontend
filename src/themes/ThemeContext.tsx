@@ -20,7 +20,7 @@ export const ThemeProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
   const toggleMode = useCallback(() => {
     setDarkMode(!darkMode);
-  }, []);
+  }, [setDarkMode, darkMode]);
 
   const theme = useMemo(
     () =>

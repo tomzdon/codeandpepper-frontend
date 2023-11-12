@@ -11,12 +11,13 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({ result }) => {
   const [player1Score, setPlayer1Score] = useState(() => {
     return parseInt(localStorage.getItem('player1Score') ?? '0', 10);
   });
+
   const [player2Score, setPlayer2Score] = useState(() => {
     return parseInt(localStorage.getItem('player2Score') ?? '0', 10);
   });
 
   useEffect(() => {
-    if (result === undefined) {
+    if (result === undefined || result.winner === null || result.player1 === null || result.player2 === null) {
       return;
     }
     if (result.winner.id === result.player1.id) {
