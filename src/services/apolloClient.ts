@@ -1,9 +1,14 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 
+const apiUrl = process.env.REACT_APP_API_URL;
+const awsUrl = process.env.REACT_APP_AWS_URL;
+const awsApiKey = process.env.REACT_APP_API_KEY;
+const isAWS = process.env.REACT_APP_ISAWS;
+
 export const apolloClient = new ApolloClient({
-  uri: 'https://imwlqzyzdjfhlkiytqyhn6zwnu.appsync-api.us-east-1.amazonaws.com/graphql',
+  uri: isAWS ? awsUrl : apiUrl,
   headers: {
-    'X-Api-Key': 'da2-lmb3biqsxjdkznr74m3qgywlsi',
+    'X-Api-Key': `${isAWS ? awsApiKey : ''}`,
   },
   cache: new InMemoryCache(),
 });

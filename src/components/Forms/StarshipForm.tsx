@@ -27,6 +27,7 @@ export const StarshipForm: React.FC<StarshipFormProps> = ({ starship, onSave }) 
         model: starship.model ?? '',
         crew: starship.crew ?? '',
         length: starship.length ?? 0,
+        id: starship.id ?? undefined,
       });
     } else {
       setFormData(defaultFormData);
@@ -35,9 +36,15 @@ export const StarshipForm: React.FC<StarshipFormProps> = ({ starship, onSave }) 
 
   const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+
+    let processedValue: string | number = value;
+    if (name === 'length') {
+      processedValue = parseFloat(value);
+    }
+
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value,
+      [name]: processedValue,
     }));
   }, []);
 

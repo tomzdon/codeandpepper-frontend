@@ -4,7 +4,8 @@
   object-fit: contain;
   animation: animate 2s infinite ease-in-out alternate;
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 600px) {
+  visibility: hidden;
     margin-top: 50px;
   }
 }

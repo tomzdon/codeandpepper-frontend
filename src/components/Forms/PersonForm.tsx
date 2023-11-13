@@ -40,14 +40,21 @@ const PersonFormComponent: React.FC<PersonFormProps> = ({ person, onSave }) => {
 
   const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+
+    let processedValue: string | number = value;
+    if (name === 'height' || name === 'mass') {
+      processedValue = parseFloat(value);
+    }
+
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value,
+      [name]: processedValue,
     }));
   }, []);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
+      console.log('-> formData', formData);
       e.preventDefault();
       onSave(formData);
     },
